@@ -23,7 +23,7 @@ const StagesSection = ({ orders, nextStage, pickOrder }) => {
     const elapsedSeconds = currentTimeInSeconds - order.startTime;
     const isDelayed = order.stage !== 'Order Placed' && elapsedSeconds > 180;
 
-    return (
+    const content = (
       <div key={order.id} className={`order-card ${order.stage === 'Order Placed' ? 'placed' : ''} ${isDelayed ? 'delayed' : ''}`}>
         <p>Order ID: {order.id}</p>
         {order.stage === 'Order Picked' && <p>Picked</p>}
@@ -37,9 +37,9 @@ const StagesSection = ({ orders, nextStage, pickOrder }) => {
         </div>
       </div>
     );
+
+    return content;
   };
-
-
 
   const getColumn = (stage) => (
     <div key={stage} className={`stage-column ${stage.toLowerCase().replace(' ', '-')}`}>
