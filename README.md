@@ -76,6 +76,6 @@
 
   <h2>Usage</h2>
   <ul>
-    <li>Visit the application in your local web browser <a href="http://localhost:3000">http://localhost:3000</a>.</li>
+    <li>Visit the application in your local web browser <a href="http://localhost:3001">http://localhost:3000</a>.</li>
     <li>Place pizza orders, track their progress, and manage the pizza-making process.</li>
   </ul>
