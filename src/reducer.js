@@ -39,7 +39,7 @@ const getTimeInSeconds = (stage, size) => {
     case 'Order Placed':
       return 0;
     case 'Order in Making':
-      return makingTime * 60; // Convert making time to seconds
+      return makingTime * 60; 
     case 'Order Ready':
       return 3 * 60; 
     case 'Order Picked':
@@ -59,9 +59,12 @@ const calculateTotalTime = (orders) => {
 const pizzaReducer = (state = initialState, action) => {
   switch (action.type) {
     case PLACE_ORDER:
+      if (state.orders.length >= 10) {
+        return state; 
+      }
       return {
         ...state,
-        orders: [...state.orders, action.payload],
+        orders: [...state.orders, { ...action.payload, startTime: new Date().getTime() / 1000 }],
         totalDelivered: state.totalDelivered + 1,
       };
     case NEXT_STAGE:

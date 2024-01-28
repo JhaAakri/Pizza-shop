@@ -34,8 +34,10 @@ body {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.order-card.placed {
-  background-color: red;
+
+
+.order-card.delayed {
+  border: 2px solid red; 
 }
 
 .stages-container {
@@ -113,4 +115,7 @@ button[type="submit"]:hover {
   color: #2c3e50;
 }
 
-
+.red-highlight {
+  color: red;
+  font-weight: bold;
+}

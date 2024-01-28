@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const PizzaOrderForm = ({ placeOrder }) => {
+const OrderForm = ({ placeOrder }) => {
   const [order, setOrder] = useState({
     type: 'Veg',
     size: 'Large',
@@ -53,4 +53,4 @@ const PizzaOrderForm = ({ placeOrder }) => {
   );
 };
 
-export default PizzaOrderForm;
+export default OrderForm;

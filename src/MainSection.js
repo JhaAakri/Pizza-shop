@@ -6,28 +6,65 @@ import TotalDeliveredForm from './TotalDeliveredForm';
 const MainSection = ({ orders }) => {
   const [pickedOrders, setPickedOrders] = useState([]);
   const dispatch = useDispatch(); 
+  const [isOrderLimitReached, setIsOrderLimitReached] = useState(false);
 
   useEffect(() => {
     const newPickedOrders = orders.filter((order) => order.stage === 'Order Picked');
     setPickedOrders(newPickedOrders);
-  }, [orders]);
+
+    
+    const currentOrderCount = orders.length;
+    const isLimitReached = currentOrderCount >= 10;
+
+    if (isOrderLimitReached !== isLimitReached) {
+      setIsOrderLimitReached(isLimitReached);
+      
+      if (isLimitReached) {
+        showAlert();
+      }
+    }
+  }, [orders, isOrderLimitReached]);
 
   const handleCancelOrder = (orderId) => {
     dispatch(cancelOrder(orderId));
   };
 
-  const getTableRow = (order, index, array) => {
-    const makingTime = order.size === 'Small' ? 3 : (order.size === 'Medium' ? 4 : 5);
+  const getMakingTime = (size) => {
+    switch (size) {
+      case 'Small':
+        return 3;
+      case 'Medium':
+        return 4;
+      case 'Large':
+        return 5;
+      default:
+        return 0;
+    }
+  };
 
-    const randomMinutes = Math.floor(Math.random() * 60);
-    const randomSeconds = Math.floor(Math.random() * 60);
-    const randomTime = `${randomMinutes} min ${randomSeconds} sec`;
-  
+  const getTableRow = (order) => {
+    const makingTime = getMakingTime(order.size);
+
+    const currentTimeInSeconds = new Date().getTime() / 1000;
+    const elapsedSeconds = currentTimeInSeconds - order.startTime;
+
+    const isDelayed = order.stage !== 'Order Placed' && elapsedSeconds > 180;
+
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = Math.floor(elapsedSeconds % 60);
+    const elapsedTime = `${minutes} min ${seconds} sec`;
+
     return (
-      <tr key={order.id}>
+      <tr key={order.id} className={isDelayed ? 'delayed' : ''}>
         <td>{order.id}</td>
         <td>{order.stage}</td>
-        <td>{order.stage === 'Order Placed' ? '0 min 0 sec' : randomTime}</td>
+        <td>
+          {order.stage === 'Order Placed' && elapsedSeconds > 180 ? (
+            <span className="red-highlight">0 min 0 sec</span>
+          ) : (
+            `${makingTime} min`
+          )}
+        </td>
         <td>
           {order.stage !== 'Order Ready' && order.stage !== 'Order Placed' && order.stage !== 'Order Picked' && (
             <button onClick={() => handleCancelOrder(order.id)}>Cancel</button>
@@ -36,17 +73,24 @@ const MainSection = ({ orders }) => {
       </tr>
     );
   };
-  
 
+  const showAlert = () => {
+    alert("Not taking any order for now.");
+  };
+
+  
   const sortedOrders = orders.slice().sort((a, b) => {
     const timeA = a.timeInSeconds || 0;
     const timeB = b.timeInSeconds || 0;
-    return timeB - timeA;
+    const delayA = a.stage !== 'Order Placed' ? timeA - a.startTime : 0;
+    const delayB = b.stage !== 'Order Placed' ? timeB - b.startTime : 0;
+    return delayB - delayA;
   });
 
   return (
     <div className="main-container">
       <h2>Main Section</h2>
+      {isOrderLimitReached && showAlert()}
       <table className="bordered">
         <thead>
           <tr>
@@ -57,7 +101,7 @@ const MainSection = ({ orders }) => {
           </tr>
         </thead>
         <tbody>
-          {sortedOrders.map((order, index, array) => getTableRow(order, index, array))}
+          {sortedOrders.map((order) => getTableRow(order))}
         </tbody>
       </table>
       <TotalDeliveredForm totalPicked={pickedOrders.length} />

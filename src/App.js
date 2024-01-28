@@ -11,13 +11,10 @@ const App = ({ orders, totalDelivered, placeOrder, nextStage, pickOrder, cancelO
     <div className="app-container">
       <h1>Pizza Shop</h1>
 
-      {/* Pizza Order */}
       <OrderForm placeOrder={placeOrder} />
 
-      {/* Pizza Stages */}
       <StagesSection orders={orders} nextStage={nextStage} pickOrder={pickOrder} cancelOrder={cancelOrder} />
 
-      {/* Main Section */}
       <MainSection orders={orders} totalDelivered={totalDelivered} />
     </div>
   );
