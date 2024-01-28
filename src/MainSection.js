@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux'; 
-import { cancelOrder } from './actions'; 
+import { useDispatch } from 'react-redux';
+import { cancelOrder } from './actions';
 import TotalDeliveredForm from './TotalDeliveredForm';
 
 const MainSection = ({ orders }) => {
   const [pickedOrders, setPickedOrders] = useState([]);
-  const dispatch = useDispatch(); 
+  const dispatch = useDispatch();
   const [isOrderLimitReached, setIsOrderLimitReached] = useState(false);
 
   useEffect(() => {
     const newPickedOrders = orders.filter((order) => order.stage === 'Order Picked');
     setPickedOrders(newPickedOrders);
 
-    
     const currentOrderCount = orders.length;
     const isLimitReached = currentOrderCount >= 10;
 
     if (isOrderLimitReached !== isLimitReached) {
       setIsOrderLimitReached(isLimitReached);
-      
+
       if (isLimitReached) {
         showAlert();
       }
@@ -44,16 +43,16 @@ const MainSection = ({ orders }) => {
 
   const getTableRow = (order) => {
     const makingTime = getMakingTime(order.size);
-
+  
     const currentTimeInSeconds = new Date().getTime() / 1000;
     const elapsedSeconds = currentTimeInSeconds - order.startTime;
-
+  
     const isDelayed = order.stage !== 'Order Placed' && elapsedSeconds > 180;
-
+  
     const minutes = Math.floor(elapsedSeconds / 60);
     const seconds = Math.floor(elapsedSeconds % 60);
     const elapsedTime = `${minutes} min ${seconds} sec`;
-
+  
     return (
       <tr key={order.id} className={isDelayed ? 'delayed' : ''}>
         <td>{order.id}</td>
@@ -73,12 +72,11 @@ const MainSection = ({ orders }) => {
       </tr>
     );
   };
-
+  
   const showAlert = () => {
     alert("Not taking any order for now.");
   };
 
-  
   const sortedOrders = orders.slice().sort((a, b) => {
     const timeA = a.timeInSeconds || 0;
     const timeB = b.timeInSeconds || 0;
@@ -90,7 +88,7 @@ const MainSection = ({ orders }) => {
   return (
     <div className="main-container">
       <h2>Main Section</h2>
-      {isOrderLimitReached && showAlert()}
+      {isOrderLimitReached && showAlert}
       <table className="bordered">
         <thead>
           <tr>

@@ -37,7 +37,9 @@ body {
 
 
 .order-card.delayed {
-  border: 2px solid red; 
+  border: 2px solid red;
+  background-color: red;
+  color: white; 
 }
 
 .stages-container {
